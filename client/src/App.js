@@ -1,25 +1,48 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
 import axios from 'axios'
+import './style.css'
+import 'font-awesome/css/font-awesome.css'
 
 class App extends Component {
+  state={
+    form:[]
+  }
   componentDidMount() {
     axios.get('http://localhost:3001/fields').then(resp => {
-      console.log(resp.data)
+      this.setState({
+        form: resp.data
+      })
     })
   }
-
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+      <div className='mainCon'>
+        <div className="signUp"> Sign up </div>
+        {this.state.form.map(item =>{
+          if (item.type === 'text'){
+         return <div className="divs"> <i className={'fa ' + item.icon} ></i> <input id={item.id} type={item.type} placeholder={item.label}/> </div>
+        }else if (item.type === 'email'){
+          return <div className="divs"> <i className={'fa ' + item.icon} ></i> <input id={item.id} type={item.type} placeholder={item.label}/> </div>
+        }else if (item.type === 'tel'){
+          return <div className="divs"> <i className={'fa ' + item.icon} ></i> <input id={item.id} type={item.type} placeholder={item.label}/> </div>
+        }else if (item.type === 'select'){
+          return <select className="divs" id={item.id}>  
+          <option> {item.label} </option>
+          {item.options.map(opt => {
+            return <option> {opt.label} </option>
+          })}
+          </select>
+        } else {
+          return <div className="divs"> <i className={'fa ' + item.icon} ></i><textarea id={item.id} placeholder={item.label}> </textarea> </div>
+        }
+
+
+
+
+
+        }
+          )}
+        <div className="submit"> <button>Submit Form</button> </div>
       </div>
     );
   }
